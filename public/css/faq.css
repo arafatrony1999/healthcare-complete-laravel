@@ -1,0 +1,230 @@
+.container{
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+.container .faq-header{
+  margin: 20px auto;
+  width: fit-content;
+  /* border-bottom: #1ACCFD solid 2px; */
+  font-size: 1.5rem;
+  text-align: center;
+}
+.faq-section{
+  margin: 0 auto;
+  text-align: center;
+  width: 80%;
+  font-size: 1.2rem;
+}
+.container .faq-card{
+    margin: 30px 0;
+    font-size: 1.2rem;
+    width: 100%;
+    border-radius: 5px;
+    box-shadow: -3px -5px 5px rgb(213 231 255 / 47%), 3px 5px 10px rgb(0 0 0 / 21%);
+}
+.container .faq-card .inline{
+    padding: 10px 20px;
+    display: flex;
+}
+.container .faq-card .inline .questions{
+    padding-left: 15px;
+}
+.container .faq-card .answers{
+    padding: 10px 10px 20px 10px;
+    width: 100%;
+}
+.container .faq-card .answers p{
+    padding-left: 50px;
+}
+.container .faq-card .answers .ul{
+    padding-left: 60px;
+}
+.container .faq-card .answers .ul li{
+    padding: 8px 0;
+}
+.faq-card .questions h3{
+    word-spacing: 7px;
+    color: #1ACCFD;
+}
+.letter-spaceing{
+    border-bottom: #1ACCFD solid 1px;
+    letter-spacing: 3px;
+}
+.margin-css{
+    margin: 15px 0;
+}
+.the-legend {
+    border-style: none;
+    border-width: 0;
+    font-size: 1.5rem;
+    line-height: 20px;
+    margin: 0 auto;
+    width: auto;
+    padding: 15px 50px;
+    border: 1px solid #e0e0e0;
+    background: white;
+}
+.the-fieldset {
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: -3px -5px 5px rgb(213 231 255 / 47%), 3px 5px 10px rgb(0 0 0 / 21%);
+}
+.form-select{
+    padding: 0 50px;
+    margin: 0 13px;
+}
+p{
+    margin: 0 13px;
+}
+.btn{
+    font-size: 1.2rem;
+    padding: 10px 25px;
+}
+
+.file-upload {
+    background-color: #ffffff;
+    margin: 0 auto;
+    padding: 20px;
+}
+  
+.file-upload-btn {
+  width: 100%;
+  margin: 0;
+  color: #fff;
+  background: #1FB264;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  border-bottom: 4px solid #15824B;
+  transition: all .2s ease;
+  outline: none;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.file-upload-btn:hover {
+  background: #1AA059;
+  color: #ffffff;
+  transition: all .2s ease;
+  cursor: pointer;
+}
+
+.file-upload-btn:active {
+  border: 0;
+  transition: all .2s ease;
+}
+
+.file-upload-content {
+  display: none;
+  text-align: center;
+}
+
+.file-upload-input {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.image-upload-wrap {
+  margin-top: 20px;
+  border: 4px dashed #1FB264;
+  position: relative;
+}
+
+.image-dropping,
+.image-upload-wrap:hover {
+  background-color: #1FB264;
+  border: 4px dashed #ffffff;
+}
+
+.image-title-wrap {
+  padding: 0 15px 15px 15px;
+  color: #222;
+}
+
+.drag-text {
+  text-align: center;
+}
+
+.drag-text h3 {
+  font-weight: 100;
+  text-transform: uppercase;
+  color: #15824B;
+  padding: 60px 0;
+}
+
+.file-upload-image {
+  max-height: 200px;
+  max-width: 200px;
+  margin: auto;
+  padding: 20px;
+}
+
+.remove-image {
+  width: 200px;
+  margin: 0;
+  color: #fff;
+  background: #cd4535;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  border-bottom: 4px solid #b02818;
+  transition: all .2s ease;
+  outline: none;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.remove-image:hover {
+  background: #c13b2a;
+  color: #ffffff;
+  transition: all .2s ease;
+  cursor: pointer;
+}
+
+.remove-image:active {
+  border: 0;
+  transition: all .2s ease;
+}
+.dummy-details{
+  width: 90%;
+  margin: 20px auto;
+  text-align: center;
+}
+.adjust{
+  width: 100%;
+  padding: 0 150px;
+}
+.text-adjust{
+  padding: 20px;
+}
+.warning,
+.warning1,
+.warning2,
+.warning3,
+.warning5{
+  width: 100%;
+  color: #f93154;
+  transition: .5s;
+  display: none;
+}
+
+
+@media(max-width:992px) {
+    .container{
+        padding: 30px 20px;
+    }
+    .container .faq-card{
+        font-size: 1rem;
+    }
+    .adjust{
+      width: 100%;
+      padding: 0 50px;
+    }
+}

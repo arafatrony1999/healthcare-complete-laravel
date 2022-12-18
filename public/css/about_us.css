@@ -1,0 +1,198 @@
+.container-about-us{
+    padding: 20px;
+}
+.about-apon-seba{
+    margin: 30px;
+}
+.about-apon-seba h2{
+    padding-bottom: 10px;
+    padding-right: 10px;
+    width: fit-content;
+    color: #1ACCFD;
+    border-bottom: 2px solid #1ACCFD;
+    letter-spacing: 3px;
+}
+.about-apon-seba p{
+    margin: 15px 0;
+    font-size: 1.1rem;
+    color: red;
+    text-align: justify;
+    text-justify: inter-word;
+}
+.about-apon-seba p span{
+    color: green;
+    padding: 0 10px;
+}
+.about-ceo{
+  padding: 0 10px;
+  text-align: justify;
+  text-justify: inter-word;
+}
+.about-ceo p{
+    color: black;
+    padding: 0 0 0 20px;
+    font-size: 1.2rem;
+    margin: 20px 0;
+}
+.auto-margin{
+    width: 100%;
+    text-align: center;
+}
+.about-ceo img{
+    width: 50%;
+    line-height: 500px;
+}
+.about-ceo h3, .about-ceo h4{
+    font-size: 1.2rem;
+    margin: 0 auto;
+    color:#1ACCFD;
+    background: #eee;
+    width: 50%;
+    padding: 10px 5px;
+    letter-spacing: 3px;
+}
+.icons-aboutUS{
+    padding: 10px 0;
+    margin: auto;
+    width: 50%;
+    background: #eee;
+}
+.icons-aboutUS a i{
+    color: white;
+    font-size: 1.2rem;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 36px;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: .3s;
+    border: 2px solid transparent; 
+}
+.icons-aboutUS a i.fa-facebook-f{
+    background: #2361e7;
+}
+.icons-aboutUS a i.fa-facebook-messenger{
+    background: #2361e7;
+}
+.icons-aboutUS a i.fa-instagram{
+    background: #d6249f;
+    background: linear-gradient(45deg, #405de6, #5851db, #833ab4, #c13584, #e1306c, #fd1d1d);
+}
+.icons-aboutUS a i.fa-twitter{
+    background: #28A9E0;
+}
+.icons-aboutUS a i:hover {
+    border: 2px solid black;
+    background: transparent;
+    color: black;
+}
+
+.card-container{
+    display: flex;
+    flex-wrap: wrap;
+}
+.card {
+    height: 500px;
+    width: 310px;
+    margin: 20px auto;
+    overflow-y: auto;
+    position: relative;
+    z-index: 1;
+    overflow-x: hidden;
+    background-color: white;
+    display: flex;
+    transition: 0.3s;
+    flex-direction: column;
+    border-radius: 10px;
+    box-shadow: -3px -5px 5px rgb(213 231 255 / 47%), 3px 5px 10px rgb(0 0 0 / 21%);
+}
+.card .card-header{
+    text-align: center;
+    background-color: white;
+    border-bottom: none;
+}
+.card .card-body{
+    padding-top: 50px;
+    padding-left: 20px;
+}
+.card .card-header .card-avatar {
+    padding: 10px 0;
+    padding-top: 30px;
+}
+.card .card-header .card-avatar img{
+    width: 80px;
+    width: 80px;
+    border-radius: 50%;
+}
+.card .card-header .card-name span{
+    letter-spacing: 2px;
+    font-size: 2rem;
+}
+.card .card-icons{
+    position: absolute;
+    bottom: 0;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+}
+.card .card-icons .icon1{
+    text-align: center;
+    width: 77.5px;
+}
+.card .card-icons .icon1 a i{
+    line-height: 40px;
+    width: 77.5px;
+    color: #fff;
+    font-size: 1.2rem;
+}
+.card .card-icons .icon1 a i.fa-facebook-f{
+    background: #2361e7;
+}
+.card .card-icons .icon1 a i.fa-facebook-messenger{
+    background: #0078FF;
+}
+.card .card-icons .icon1 a i.fa-instagram{
+    background: #d6249f;
+    background: linear-gradient(45deg, #405de6, #5851db, #833ab4, #c13584, #e1306c, #fd1d1d);
+}
+.card .card-icons .icon1 a i.fa-twitter{
+    background: #28A9E0;
+}
+
+@media(max-width:992px){
+    .about-ceo{
+        margin: 20px 10px;
+        padding: 0;
+        display: block;
+    }
+    .about-ceo p{
+        margin: auto;
+        font-size: 1.2rem;
+        width: 100%;
+        padding: 10px 0;
+    }
+    .about-ceo img{
+        width: 100%;
+    }
+    .icons-aboutUS a i{
+        font-size: 1rem;
+        height: 35px;
+        width: 35px;
+        line-height: 31px;
+        margin: 0 2px;
+    }
+    .about-ceo h3, .about-ceo h4{
+        letter-spacing: 3px;
+        width: 100%;
+        padding: 5px 5px;
+    }
+    .icons-aboutUS{
+        padding: 5px 0 10px 0;
+        width: 100%;
+    }
+    .about-apon-seba{
+        margin: 30px 10px;
+    }
+}

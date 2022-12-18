@@ -1,0 +1,150 @@
+.contact{
+    position: relative;
+    /* min-height: calc(100vh - 80px); */
+    padding: 50px 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: white;
+    z-index: 0;
+}
+.contact .content{
+    max-width: 800px;
+    text-align: center;
+}
+.contact .content h2{
+    font-size: 36px;
+    font-weight: 500;
+    color: black;
+    margin-bottom: 35px;
+}
+.contact .content p{
+    font-weight: 300;
+    color: black;
+}
+.contact .content p a{
+    text-decoration: underline;
+    color: black;
+    transition: .5s ease-in;
+    font-size: 1.1rem;
+}
+.container-contact{
+    margin-top: 80px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.container-contact .contactInfo{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+.container-contact .contactInfo .box{
+    position: relative;
+    padding: 20px 0;
+    display: flex;
+}
+.container-contact .contactInfo .box .icon{
+    min-width: 60px;
+    height: 60px;
+    background: #fff;
+    border: 1px dotted black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    font-size: 22px;
+}
+.container-contact .contactInfo .box .text{
+    display: flex;
+    margin-left: 20px;
+    font-size: 16px;
+    color: black;
+    flex-direction: column;
+    font-weight: 300;
+}
+.container-contact .contactInfo .box .text h3{
+    font-weight: 500;
+    color: #00bcd4;
+}
+.container-contact .contactInfo .box .text a{
+    transition: 1s;
+    display: flex;
+    color: black;
+    text-decoration: none;
+    margin-left: 5px;
+}
+.container-contact .contactInfo .box .text a:hover{
+    /* color: #e91e63; */
+    color: rgb(14, 240, 14);
+    font-size: 18px;
+    transition: 1s;
+}
+.contactForm{
+    width: 40%;
+    padding: 40px;
+    background: #fff;
+    box-shadow: -3px -5px 5px rgb(213 231 255 / 47%), 3px 5px 10px rgb(0 0 0 / 21%);
+}
+.contactForm h2{
+    font-size: 30px;
+    color: #333;
+    font-weight: 500;
+}
+.contactForm .inputBox{
+    position: relative;
+    width: 100%;
+    margin-top: 10px;
+}
+.contactForm .inputBox input,
+.contactForm .inputBox textarea{
+    width: 100%;
+    padding: 5px 0;
+    font-size: 16px;
+    margin: 10px 0;
+    border: none;
+    border-bottom: 2px solid black;
+    color: black;
+    background: none;
+    outline: none;
+    resize: none;
+}
+.contactForm .inputBox button{
+    width: 100px;
+    background: #fff;
+    color: black;
+    border: 1px solid black;
+    cursor: pointer;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 40px;
+    transition: .5s;
+}
+.contactForm .inputBox button:hover{
+    background: #00bcd4;
+    color: white;
+    transition: .5s;
+}
+a.acitve-contact{
+  color: #fff;
+  background: #fff;
+  border-radius: 40px;
+}
+
+@media (max-width: 992px){
+    .contact{
+        padding: 20px;
+    }
+    .container-contact{
+        flex-direction: column;
+    }
+    .container-contact .contactInfo{
+        margin-bottom: 40px;
+    }
+    .container-contact .contactInfo,
+    .contactForm{
+        width: 90%;
+    }
+}
