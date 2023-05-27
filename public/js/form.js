@@ -87,7 +87,7 @@ function sendData(){
 
 
 
-function formSendData() {
+function formSendData(){
     var spinner = "<div class='spinner-border mx-3' role='status'></div>";
     
     $('#roundSpinner').html(spinner);
@@ -152,50 +152,36 @@ function formSendData() {
                     else{
                         $('#nid').css('border','2px solid green');
                         $('.warning3').css('display','none');
+
+                        
+                        var myFile = document.getElementById('inputFile').files[0];
             
-                    
-                        var allFormData = {
-                            firstName:firstName,
-                            lastName:lastName,
-                            gender:gender,
-                            phoneNumber:phoneNumber,
-                            emailaddrs:emailaddrs,
-                            FBid:FBid,
-                            addr:addr,
-                            city:city,
-                            zip:zip,
-                            nid:nid
-                        };
+                        var formData = new FormData();
+                        formData.append('firstName', firstName)
+                        formData.append('lastName', lastName)
+                        formData.append('gender', gender)
+                        formData.append('phoneNumber', phoneNumber)
+                        formData.append('emailaddrs', emailaddrs)
+                        formData.append('FBid', FBid)
+                        formData.append('addr', addr)
+                        formData.append('city', city)
+                        formData.append('zip', zip)
+                        formData.append('nid', nid)
+                        formData.append('fileData1',myFile);
+
 
                         var url1 = "/applyFormInsert";
 
 
-                        axios.post(url1,allFormData)
+                        axios.post(url1,formData)
                         .then(function (response) {
-                            
-                            var myFile = document.getElementById('inputFile').files[0];
-
-                            var fileData = new FormData();
-                            fileData.append('fileData1',myFile);
-                            var url2 = '/applyFormImageInsert';
-
-                            var config = {headers:{'content-type':'multipart/form-data'}};
-
-                            axios.post(url2,fileData,config)
-                            .then(function(response){
-                                alert('picture upload success');
-                            })
-                            .catch(function(error){
-                                alert('picture upload failed');
-                            });
-
-                            $('#sendUserName').html("<div class='text-adjust'>Thanks"+" "+firstName+" "+lastName+",<br>We received your application successfully.</div>")
-                            $('#validateModal').modal('show');
-                            $('#roundSpinner').html('Register');
+                            if(response.data === 1){
+                                window.location.replace('/verify_account');
+                            }
                         })
                         .catch(function (error) {
                             $('#sendUserName').html("<img class='adjust' src='images/SorryEmoji.png' <br> Something went wrong! <br> Try again.")
-                            $('#validateModal').modal('show');
+                            $('#errorModal').modal('show');
                         });
                     }
                 }

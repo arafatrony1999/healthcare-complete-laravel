@@ -11,9 +11,16 @@ use App\Models\services;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\MailNotify;
 
 class SiteController extends Controller
 {
+    function mail(){
+        $data = ['name' => 'Arafat', 'subject' => 'Verify your account', 'body' => 'Hello world', 'code' => 215952];
+        Mail::to('arafat.rony1999@gmail.com')->queue(new MailNotify($data));
+        return 1;
+    }
+
     function index(Request $request) {
 
         $visitors_ip = $request->ip();
@@ -52,8 +59,18 @@ class SiteController extends Controller
         $results = JobModel::orderBy('id','desc')->get();
         return view('allJobs',['results'=>$results]);
     }
-    function apply() {
-        return view('job_apply');
+    function apply(Request $request) {
+        $sessionfirstName = $request->session()->get('sessionfirstName');
+        $sessionlastName = $request->session()->get('sessionlastName');
+        $sessionPhoneNumber = $request->session()->get('sessionPhoneNumber');
+        $sessionEmailAddr = $request->session()->get('sessionEmailAddr');
+        $sessionNID = $request->session()->get('sessionNID');
+
+        if($sessionfirstName && $sessionlastName && $sessionPhoneNumber && $sessionEmailAddr && $sessionNID){
+            return redirect('verify_account')->with(['email' => $sessionEmailAddr]);
+        }else{
+            return view('job_apply');
+        }
     }
     function form() {
         return view('form');
@@ -86,13 +103,6 @@ class SiteController extends Controller
     }
     
     function applyFormInsert(Request $request) {
-        $request->session()->forget('sessionfirstName');
-        $request->session()->forget('sessionlastName');
-        $request->session()->forget('sessionPhoneNumber');
-        $request->session()->forget('sessionEmailAddr');
-        $request->session()->forget('sessionNID');
-        $request->session()->forget('sessionCode');
-
         $firstName = $request->input('firstName');
         $lastName = $request->input('lastName');
         $gender = $request->input('gender');
@@ -105,58 +115,134 @@ class SiteController extends Controller
         $nid = $request->input('nid');
 
         $validCode = random_int(100000, 999999);
+        $code_time = time();
+
+        if($request->hasFile('fileData1')){
+            $imagePath = $request->file('fileData1')->store('public');
+            $imageName = (explode('/',$imagePath))[1];
+            $hostName = $_SERVER['HTTP_HOST'];
+            $first = "http://";
+    
+            $finalImageName = $first.$hostName."/storage"."/".$imageName;
+            
+            $form = new job_apply_form();
+            $form->firstName = $firstName;
+            $form->lastName = $lastName;
+            $form->gender = $gender;
+            $form->number = $phoneNumber;
+            $form->email = $emailaddrs;
+            $form->FB = $FBid;
+            $form->address = $addr;
+            $form->city = $city;
+            $form->zip = $zip;
+            $form->nid = $nid;
+            $form->valid_code = $validCode;
+            $form->image = $finalImageName;
+            $form->code_time = $code_time;
+            $form->save();
+
+            $id = $form->id;
+        }else{
+            $form = new job_apply_form();
+            $form->firstName = $firstName;
+            $form->lastName = $lastName;
+            $form->gender = $gender;
+            $form->number = $phoneNumber;
+            $form->email = $emailaddrs;
+            $form->FB = $FBid;
+            $form->address = $addr;
+            $form->city = $city;
+            $form->zip = $zip;
+            $form->nid = $nid;
+            $form->valid_code = $validCode;
+            $form->code_time = $code_time;
+            $form->save();
+
+            $id = $form->id;
+        }
 
 
-        $result = DB::insert('INSERT INTO `job_apply_form` (`firstName`, `lastName`, `gender`, `number`, `email`, `FB`, `address`, `city`, `zip`, `nid`,`valid_code`) VALUES (?,?,?,?,?,?,?,?,?,?,?)',[$firstName, $lastName, $gender, $phoneNumber, $emailaddrs, $FBid, $addr, $city, $zip, $nid, $validCode]);
+        $data = ['firstName'=>$firstName,'lastName'=>$lastName,'email'=>$emailaddrs,'subject' => 'Verify your account','code' => $validCode];
 
-        $data = ['firstName'=>$firstName,'lastName'=>$lastName,'code'=>$validCode];
-        $user['to'] = $emailaddrs;
+        Mail::to($emailaddrs)->send(new MailNotify($data));
 
-        Mail::send('mailbody',$data,function($messages) use ($user){
-            $messages->from('arafat.rony999@gmail.com', 'Apon Seba Home Care');
-            $messages->sender('arafat.rony999@gmail.com', 'Apon Seba Home Care');
-            $messages->replyTo('arafat.rony999@gmail.com', 'Apon Seba Home Care');
-            $messages->to($user['to']);
-            $messages->subject('Confirm Your Job Application');
-        });
 
+        
         $request->session()->put('sessionfirstName',$firstName);
         $request->session()->put('sessionlastName',$lastName);
         $request->session()->put('sessionPhoneNumber',$phoneNumber);
         $request->session()->put('sessionEmailAddr',$emailaddrs);
         $request->session()->put('sessionNID',$nid);
-        $request->session()->put('sessionCode',$validCode);
-        if($result==true){
-            return 1;
-        }else{
-            return 0;
-        }
+        $request->session()->put('id',$id);
+
+        return 1;
     }
 
-
-    function applyFormImageInsert(Request $request){
+    function verify_account(Request $request){
         $sessionfirstName = $request->session()->get('sessionfirstName');
         $sessionlastName = $request->session()->get('sessionlastName');
         $sessionPhoneNumber = $request->session()->get('sessionPhoneNumber');
         $sessionEmailAddr = $request->session()->get('sessionEmailAddr');
         $sessionNID = $request->session()->get('sessionNID');
-        $sessionCode = $request->session()->get('sessionCode');
+        $id = $request->session()->get('id');
 
-        $imagePath = $request->file('fileData1')->store('public');
-        $imageName = (explode('/',$imagePath))[1];
-        $hostName = $_SERVER['HTTP_HOST'];
-        $first = "http://";
-
-        $finalImageName = $first.$hostName."/storage"."/".$imageName;
-        DB::table('job_apply_form')
-            ->where('firstName','=',$sessionfirstName)
-            ->where('lastName','=',$sessionlastName)
-            ->where('number','=',$sessionPhoneNumber)
-            ->where('email','=',$sessionEmailAddr)
-            ->where('nid','=',$sessionNID)
-            ->where('valid_code','=',$sessionCode)
-            ->update(['image'=> $finalImageName]);
+        if($sessionfirstName && $sessionlastName && $sessionPhoneNumber && $sessionEmailAddr && $sessionNID){
+            return view('validation', ['email' => $sessionEmailAddr, 'id' => $id]);
+        }else{
+            return redirect('/apply')->with(['register_need_message' => 'You need to register first']);
+        }
     }
+
+    function account_validation(Request $request){
+        $code = $request->code;
+        
+        $sessionfirstName = $request->session()->get('sessionfirstName');
+        $sessionlastName = $request->session()->get('sessionlastName');
+        $sessionPhoneNumber = $request->session()->get('sessionPhoneNumber');
+        $sessionEmailAddr = $request->session()->get('sessionEmailAddr');
+        $sessionNID = $request->session()->get('sessionNID');
+        $id = $request->session()->get('id');
+
+        $main_code = job_apply_form::where('id', $id)->where('firstName',$sessionfirstName)->where('lastName',$sessionlastName)->where('number',$sessionPhoneNumber)->where('email',$sessionEmailAddr)->where('nid',$sessionNID)->get('valid_code')[0]->valid_code;
+
+        if($code === $main_code){
+            $code_time = job_apply_form::where('id', $id)->where('firstName',$sessionfirstName)->where('lastName',$sessionlastName)->where('number',$sessionPhoneNumber)->where('email',$sessionEmailAddr)->where('nid',$sessionNID)->get('code_time')[0]->code_time;
+            if(time() - $code_time <= 120){
+                job_apply_form::where('id', $id)->where('firstName',$sessionfirstName)->where('lastName',$sessionlastName)->where('number',$sessionPhoneNumber)->where('email',$sessionEmailAddr)->where('nid',$sessionNID)->update([
+                    'valid_status' => 'valid'
+                ]);
+                
+                session()->flush();
+            }else{
+                return redirect()->back()->with(['validity' => false, 'email' => $sessionEmailAddr, 'id' => $id]);
+            }
+        }else{
+            return redirect()->back()->with(['code_error' => 'The code you entered is incorrect! Please Check again', 'email' => $sessionEmailAddr, 'id' => $id]);
+        }
+    }
+
+    function new_verification_code(Request $request){
+        $email = $request->email;
+        $id = $request->id;
+
+        $sessionfirstName = $request->session()->get('sessionfirstName');
+        $sessionlastName = $request->session()->get('sessionlastName');
+
+        $validCode = random_int(100000, 999999);
+        $code_time = time();
+
+        job_apply_form::where('id', $id)->where('email', $email)->update([
+            'valid_code' => $validCode,
+            'code_time' => $code_time
+        ]);
+
+        $data = ['firstName'=>$sessionfirstName,'lastName'=>$sessionlastName,'email'=>$email,'subject' => 'Verify your account','code' => $validCode];
+
+        Mail::to($email)->send(new MailNotify($data));
+
+        return redirect()->back()->with(['resend' => true]);
+    }
+
 
     function validityURL(Request $request){
         $code = $request->input('code');
@@ -364,15 +450,16 @@ class SiteController extends Controller
         $jobGender = $request->input('jobGender');
         $jobShift = $request->input('jobShift');
 
-        $result = JobModel::where('id',$getJobMainID)
-                    ->update([
-                    'needservice'=>$jobService,
-                    'patientaddress'=>$jobAddress,
-                    'problem'=>$jobProblem,
-                    'age'=>$jobAge,
-                    'gender'=>$jobGender,
-                    'shift'=>$jobShift
-                ]);
+        $result = JobModel::where('id',$getJobMainID)->update([
+            'needservice'=>$jobService,
+            'patientaddress'=>$jobAddress,
+            'problem'=>$jobProblem,
+            'age'=>$jobAge,
+            'gender'=>$jobGender,
+            'shift'=>$jobShift
+        ]);
+
+
         if($result==true){
             return 1;
         }

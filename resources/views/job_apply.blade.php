@@ -24,6 +24,12 @@
                 জরুরী প্রয়োজনে যোগাযোগ করুন <a href="tel:+8801617799750">+880 1617-799750</a> এই নম্বরে।
             </div>
 
+            @if (session()->has('register_need_message'))
+                <span style="color: red; padding-left: 18px ">
+                    {{ session()->get('register_need_message') }}
+                </span>
+            @endif
+
             <div class="col-md-6 margin-css">
                 <label for="validationCustomUsername" class="form-label">First Name</label>
                 <input type="text" id="firstName" class="form-control" placeholder="Enter your first name"
@@ -156,27 +162,38 @@
             </div>
 
             <div class="col-12 margin-css">
-                <button onclick="formSendData()" id="roundSpinner" class="btn btn-primary"> Register </button>
+                <button onclick="formSendData()" id="roundSpinner" class="btn btn-primary">Register</button>
             </div>
         </fieldset>
     </div>
 </section>
 
-
-<div class="modal fade" id="validateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-body">
                 <h1 class="p-1">
                     <span id="sendUserName"></span>
                 </h1>
-                {{-- <h4 class="my-2">We have send you a 6 digit code at your email address. Enter the code below.</h4>
-                <form>
+            </div>
+            <div class="modal-footer">
+                <button onclick="hide()" type="button" class="getID btn btn-danger">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="validateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h4 class="my-2">We have send you a 6 digit code at your email address. Enter the code below.</h4>
+                <form action="/account_validation" method="POST">
                     <div class="form-group my-3">
                         <label for="inputValid">Enter 6 digit code</label>
                         <input type="text" class="form-control" id="inputValid" aria-describedby="emailHelp" placeholder="Enter your code">
                     </div>
-                </form> --}}
+                </form>
             </div>
             <div class="modal-footer">
                 <button onclick="hide()" type="button" class="getID btn btn-danger">Cancel</button>

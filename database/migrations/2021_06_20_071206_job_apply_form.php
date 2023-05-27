@@ -15,7 +15,7 @@ class JobApplyForm extends Migration
     {
         Schema::create('job_apply_form', function(Blueprint $job_table){
 
-            $job_table->bigIncrements('id');
+            $job_table->id();
             $job_table->string('firstName');
             $job_table->string('lastName');
             $job_table->string('gender');
@@ -29,7 +29,9 @@ class JobApplyForm extends Migration
             $job_table->string('valid_code');
             $job_table->string('valid_status')->default('not_valid');
             $job_table->string('image')->nullable();
-            $job_table->timeStamps();
+            $job_table->integer('code_time');
+            $job_table->timestamp('created_at')->useCurrent();
+            $job_table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
 
         });
     }

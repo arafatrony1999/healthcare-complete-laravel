@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{URL::asset('css/contact_us.css') }}">
     <link rel="stylesheet" href="{{URL::asset('css/faq.css') }}">
     <link rel="stylesheet" href="{{URL::asset('css/services.css') }}">
+    <link rel="stylesheet" href="{{URL::asset('css/sixdigit.css') }}" >
     <link rel="stylesheet" href="{{URL::asset('css/css/bootstrap.min.css') }}" />
     <link rel="stylesheet" href="{{URL::asset('css/css/aos.css') }}" >
     <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
@@ -168,8 +169,6 @@
     @yield('content')
 
 
-
-    
     <footer>
         <div class="footer-top">
             <h2>Apon Seba Homecare</h2>
@@ -337,9 +336,8 @@
 
 
     function myFunction() {
-      document.querySelector(".preloader").style.display = "none";
+        document.querySelector(".preloader").style.display = "none";
     }
-
 
 </script>
 

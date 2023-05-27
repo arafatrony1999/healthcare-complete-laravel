@@ -24,10 +24,14 @@ Route::get('/allJobs', 'App\Http\Controllers\SiteController@allJobs');
 Route::get('/apply', 'App\Http\Controllers\SiteController@apply');
 
 Route::get('/form', 'App\Http\Controllers\SiteController@form');
+Route::get('/verify_account', 'App\Http\Controllers\SiteController@verify_account');
+Route::get('/new_verification_code', 'App\Http\Controllers\SiteController@new_verification_code');
+
+Route::post('/account_validation', 'App\Http\Controllers\SiteController@account_validation');
 
 
 // routes for admin log out
-Route::get('/logout', 'App\Http\Controllers\SiteController@logout ');
+Route::get('/logout', 'App\Http\Controllers\SiteController@logout');
 
 // routes for admin login
 Route::get('/login', 'App\Http\Controllers\SiteController@login')->middleware('adminMiddleware');
@@ -101,10 +105,10 @@ Route::post('/updateURL', 'App\Http\Controllers\SiteController@updateURL');
 // Migration route 
 Route::get('migrate', function () {
     if(Artisan::call('migrate')==true){
-        return 'success';
+        return 1;
     }
     else{
-        return 'failed';
+        return 0;
     }
 });
 
@@ -112,3 +116,5 @@ Route::get('clear', function () {
     Artisan::call('config:clear');
     Artisan::call('cache:clear');
 });
+
+Route::get('/mail', 'App\Http\Controllers\SiteController@mail');
