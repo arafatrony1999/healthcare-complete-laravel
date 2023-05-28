@@ -15,12 +15,6 @@ use App\Mail\MailNotify;
 
 class SiteController extends Controller
 {
-    function mail(){
-        $data = ['name' => 'Arafat', 'subject' => 'Verify your account', 'body' => 'Hello world', 'code' => 215952];
-        Mail::to('arafat.rony1999@gmail.com')->queue(new MailNotify($data));
-        return 1;
-    }
-
     function index(Request $request) {
 
         $visitors_ip = $request->ip();
@@ -59,19 +53,6 @@ class SiteController extends Controller
         $results = JobModel::orderBy('id','desc')->get();
         return view('allJobs',['results'=>$results]);
     }
-    function apply(Request $request) {
-        $sessionfirstName = $request->session()->get('sessionfirstName');
-        $sessionlastName = $request->session()->get('sessionlastName');
-        $sessionPhoneNumber = $request->session()->get('sessionPhoneNumber');
-        $sessionEmailAddr = $request->session()->get('sessionEmailAddr');
-        $sessionNID = $request->session()->get('sessionNID');
-
-        if($sessionfirstName && $sessionlastName && $sessionPhoneNumber && $sessionEmailAddr && $sessionNID){
-            return redirect('verify_account')->with(['email' => $sessionEmailAddr]);
-        }else{
-            return view('job_apply');
-        }
-    }
     function form() {
         return view('form');
     }
@@ -102,6 +83,21 @@ class SiteController extends Controller
         }
     }
     
+    function apply(Request $request) {
+        $sessionfirstName = $request->session()->get('sessionfirstName');
+        $sessionlastName = $request->session()->get('sessionlastName');
+        $sessionPhoneNumber = $request->session()->get('sessionPhoneNumber');
+        $sessionEmailAddr = $request->session()->get('sessionEmailAddr');
+        $sessionNID = $request->session()->get('sessionNID');
+        $sessionid = $request->session()->get('sessionid');
+
+        if($sessionid && $sessionfirstName && $sessionlastName && $sessionPhoneNumber && $sessionEmailAddr && $sessionNID){
+            return redirect('verify_account')->with(['email' => $sessionEmailAddr, 'id' => $sessionid]);
+        }else{
+            return view('job_apply');
+        }
+    }
+
     function applyFormInsert(Request $request) {
         $firstName = $request->input('firstName');
         $lastName = $request->input('lastName');
@@ -117,52 +113,38 @@ class SiteController extends Controller
         $validCode = random_int(100000, 999999);
         $code_time = time();
 
+            
+        $form = new job_apply_form();
+        $form->firstName = $firstName;
+        $form->lastName = $lastName;
+        $form->gender = $gender;
+        $form->number = $phoneNumber;
+        $form->email = $emailaddrs;
+        $form->FB = $FBid;
+        $form->address = $addr;
+        $form->city = $city;
+        $form->zip = $zip;
+        $form->nid = $nid;
+        $form->valid_code = $validCode;
+        
         if($request->hasFile('fileData1')){
             $imagePath = $request->file('fileData1')->store('public');
             $imageName = (explode('/',$imagePath))[1];
             $hostName = $_SERVER['HTTP_HOST'];
             $first = "http://";
-    
-            $finalImageName = $first.$hostName."/storage"."/".$imageName;
-            
-            $form = new job_apply_form();
-            $form->firstName = $firstName;
-            $form->lastName = $lastName;
-            $form->gender = $gender;
-            $form->number = $phoneNumber;
-            $form->email = $emailaddrs;
-            $form->FB = $FBid;
-            $form->address = $addr;
-            $form->city = $city;
-            $form->zip = $zip;
-            $form->nid = $nid;
-            $form->valid_code = $validCode;
+
+            $finalImageName = $first.$hostName."/public/storage"."/".$imageName;
+
             $form->image = $finalImageName;
-            $form->code_time = $code_time;
-            $form->save();
-
-            $id = $form->id;
-        }else{
-            $form = new job_apply_form();
-            $form->firstName = $firstName;
-            $form->lastName = $lastName;
-            $form->gender = $gender;
-            $form->number = $phoneNumber;
-            $form->email = $emailaddrs;
-            $form->FB = $FBid;
-            $form->address = $addr;
-            $form->city = $city;
-            $form->zip = $zip;
-            $form->nid = $nid;
-            $form->valid_code = $validCode;
-            $form->code_time = $code_time;
-            $form->save();
-
-            $id = $form->id;
         }
 
+        $form->code_time = $code_time;
+        $form->save();
 
-        $data = ['firstName'=>$firstName,'lastName'=>$lastName,'email'=>$emailaddrs,'subject' => 'Verify your account','code' => $validCode];
+        $id = $form->id;
+
+
+        $data = ['id'=> $id,'firstName'=>$firstName,'lastName'=>$lastName,'email'=>$emailaddrs,'subject' => 'Verify your account','code' => $validCode];
 
         Mail::to($emailaddrs)->send(new MailNotify($data));
 
@@ -173,7 +155,7 @@ class SiteController extends Controller
         $request->session()->put('sessionPhoneNumber',$phoneNumber);
         $request->session()->put('sessionEmailAddr',$emailaddrs);
         $request->session()->put('sessionNID',$nid);
-        $request->session()->put('id',$id);
+        $request->session()->put('sessionid',$id);
 
         return 1;
     }
@@ -184,10 +166,10 @@ class SiteController extends Controller
         $sessionPhoneNumber = $request->session()->get('sessionPhoneNumber');
         $sessionEmailAddr = $request->session()->get('sessionEmailAddr');
         $sessionNID = $request->session()->get('sessionNID');
-        $id = $request->session()->get('id');
+        $sessionid = $request->session()->get('sessionid');
 
-        if($sessionfirstName && $sessionlastName && $sessionPhoneNumber && $sessionEmailAddr && $sessionNID){
-            return view('validation', ['email' => $sessionEmailAddr, 'id' => $id]);
+        if($sessionid && $sessionfirstName && $sessionlastName && $sessionPhoneNumber && $sessionEmailAddr && $sessionNID){
+            return view('validation', ['email' => $sessionEmailAddr, 'id' => $sessionid]);
         }else{
             return redirect('/apply')->with(['register_need_message' => 'You need to register first']);
         }
@@ -201,23 +183,27 @@ class SiteController extends Controller
         $sessionPhoneNumber = $request->session()->get('sessionPhoneNumber');
         $sessionEmailAddr = $request->session()->get('sessionEmailAddr');
         $sessionNID = $request->session()->get('sessionNID');
-        $id = $request->session()->get('id');
+        $sessionid = $request->session()->get('sessionid');
 
-        $main_code = job_apply_form::where('id', $id)->where('firstName',$sessionfirstName)->where('lastName',$sessionlastName)->where('number',$sessionPhoneNumber)->where('email',$sessionEmailAddr)->where('nid',$sessionNID)->get('valid_code')[0]->valid_code;
-
-        if($code === $main_code){
-            $code_time = job_apply_form::where('id', $id)->where('firstName',$sessionfirstName)->where('lastName',$sessionlastName)->where('number',$sessionPhoneNumber)->where('email',$sessionEmailAddr)->where('nid',$sessionNID)->get('code_time')[0]->code_time;
-            if(time() - $code_time <= 120){
-                job_apply_form::where('id', $id)->where('firstName',$sessionfirstName)->where('lastName',$sessionlastName)->where('number',$sessionPhoneNumber)->where('email',$sessionEmailAddr)->where('nid',$sessionNID)->update([
-                    'valid_status' => 'valid'
-                ]);
-                
-                session()->flush();
+        if($sessionid && $sessionfirstName && $sessionlastName && $sessionPhoneNumber && $sessionEmailAddr && $sessionNID){
+            $main_code = job_apply_form::where('id',$sessionid)->where('firstName',$sessionfirstName)->where('lastName',$sessionlastName)->where('number',$sessionPhoneNumber)->where('email',$sessionEmailAddr)->where('nid',$sessionNID)->get('valid_code')[0]->valid_code;
+    
+            if($code === $main_code){
+                $code_time = job_apply_form::where('id', $sessionid)->where('firstName',$sessionfirstName)->where('lastName',$sessionlastName)->where('number',$sessionPhoneNumber)->where('email',$sessionEmailAddr)->where('nid',$sessionNID)->get('code_time')[0]->code_time;
+                if(time() - $code_time <= 120){
+                    job_apply_form::where('id', $sessionid)->where('firstName',$sessionfirstName)->where('lastName',$sessionlastName)->where('number',$sessionPhoneNumber)->where('email',$sessionEmailAddr)->where('nid',$sessionNID)->update([
+                        'valid_status' => 'valid'
+                    ]);
+                    
+                    session()->flush();
+                }else{
+                    return redirect()->back()->with(['validity' => false, 'email' => $sessionEmailAddr, 'id' => $sessionid]);
+                }
             }else{
-                return redirect()->back()->with(['validity' => false, 'email' => $sessionEmailAddr, 'id' => $id]);
+                return redirect()->back()->with(['code_error' => 'The code you entered is incorrect! Please Check again', 'email' => $sessionEmailAddr, 'id' => $sessionid]);
             }
         }else{
-            return redirect()->back()->with(['code_error' => 'The code you entered is incorrect! Please Check again', 'email' => $sessionEmailAddr, 'id' => $id]);
+            return redirect('/apply')->with(['register_need_message' => 'You need to register first']);
         }
     }
 
@@ -236,7 +222,7 @@ class SiteController extends Controller
             'code_time' => $code_time
         ]);
 
-        $data = ['firstName'=>$sessionfirstName,'lastName'=>$sessionlastName,'email'=>$email,'subject' => 'Verify your account','code' => $validCode];
+        $data = ['id'=>$id,'firstName'=>$sessionfirstName,'lastName'=>$sessionlastName,'email'=>$email,'subject' => 'Verify your account','code' => $validCode];
 
         Mail::to($email)->send(new MailNotify($data));
 
@@ -244,34 +230,14 @@ class SiteController extends Controller
     }
 
 
-    function validityURL(Request $request){
-        $code = $request->input('code');
-
-        $count = job_apply_form::where('valid_code','=', $code)->count();
-
-        if($count==1){
-            $result = job_apply_form::where('valid_code','=', $code)->update([
-                'valid_status'=>'valid'
-            ]);
-
-            if($result==true){
-                return 1;
-            }
-            else{
-                return 0;
-            }
-        }
-        else{
-            return 0;
-        }
-    }
-
     function abcd(Request $request){
-        return $request->session()->get('sessionsessionfirstName');
-        return $request->session()->get('sessionlastName');
-        return $request->session()->get('sessionPhoneNumber');
-        return $request->session()->get('sessionEmailAddr');
-        return $request->session()->get('sessionNID');
+        // dd($request->session()->get('sessionfirstName'));
+        // dd($request->session()->get('sessionlastName'));
+        // dd($request->session()->get('sessionPhoneNumber'));
+        // dd($request->session()->get('sessionEmailAddr'));
+        // dd($request->session()->get('sessionNID'));
+        // session()->put('sessionid',8);
+        dd($request->session()->get('sessionid'));
     }
 
     function adminForm() {
